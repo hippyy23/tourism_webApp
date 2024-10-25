@@ -53,19 +53,19 @@
                 <ul>
                     <li><a class="nav-link scrollto" href="/">Home</a></li>
                     {% if user.is_superuser %}
-                        <li><a class="nav-link scrollto" href="/editEvent">Edit</a></li>
+                        <li><a class="nav-link scrollto" href="/editActivity">Edit</a></li>
                         <li><a class="nav-link scrollto" href="/admin/">Control panel</a></li>
                     {% elif user.is_staff %}
-                        <li><a class="nav-link scrollto" href="/editEvent">Edit</a></li>
+                        <li><a class="nav-link scrollto" href="/editActivity">Edit</a></li>
                     {% endif %}
                     {% if user.is_authenticated %}
                         <li class="dropdown"><a href="#"><span><img src="{% static '/assets/img/flags/'%}{{ lang }}.jpg" alt="it" height="20" ></span> <i class="bi bi-chevron-down"></i></a>
                             <ul>
-                                <li><a href="/Event/{{ event.classid }}" ><img src="{% static '/assets/img/flags/it.jpg' %}" alt="it" height="20" style="padding-left: 10px;">Italiano</a></li>
-                                <li><a href="/Event/{{ event.classid }}+en" ><img src="{% static '/assets/img/flags/en.jpg' %}" alt="en" height="20" style="padding-left: 10px;">English</a></li>
-                                <li><a href="/Event/{{ event.classid }}+es" ><img src="{% static '/assets/img/flags/es.jpg' %}" alt="es" height="20" style="padding-left: 10px;">Español</a></li>
-                                <li><a href="/Event/{{ event.classid }}+fr" ><img src="{% static '/assets/img/flags/fr.jpg' %}" alt="fr" height="20" style="padding-left: 10px;">Français</a></li>
-                                <li><a href="/Event/{{ event.classid }}+de" ><img src="{% static '/assets/img/flags/de.jpg' %}" alt="de" height="20" style="padding-left: 10px;">Deutsch</a></li>
+                                <li><a href="/Activity/{{ art.classid }}" ><img src="{% static '/assets/img/flags/it.jpg' %}" alt="it" height="20" style="padding-left: 10px;">Italiano</a></li>
+                                <li><a href="/Activity/{{ art.classid }}+en" ><img src="{% static '/assets/img/flags/en.jpg' %}" alt="en" height="20" style="padding-left: 10px;">English</a></li>
+                                <li><a href="/Activity/{{ art.classid }}+es" ><img src="{% static '/assets/img/flags/es.jpg' %}" alt="es" height="20" style="padding-left: 10px;">Español</a></li>
+                                <li><a href="/Activity/{{ art.classid }}+fr" ><img src="{% static '/assets/img/flags/fr.jpg' %}" alt="fr" height="20" style="padding-left: 10px;">Français</a></li>
+                                <li><a href="/Activity/{{ art.classid }}+de" ><img src="{% static '/assets/img/flags/de.jpg' %}" alt="de" height="20" style="padding-left: 10px;">Deutsch</a></li>
                             </ul>
                         </li>
 
@@ -87,7 +87,7 @@
             <div class="container">
                 <ol>
                     <li><a href="/">Home</a></li>
-                    <li><a href="/Event">Event</a></li>
+                    <li><a href="/Activity">Activity</a></li>
                     <li>Details</li>
                 </ol>
                 <h2>{{ name_trad }}</h2>
@@ -109,25 +109,9 @@
                                 <!--li><strong>Location</strong>: {{ latitude }}, {{ longitude }}</li-->
                                 <tr style="vertical-align:top">
                                     <td><strong>Open time</strong>: </td>
+                                    <td><div style="padding: 10px">{{ open_time_trad|safe}}</div></td>
                                 </tr>
-                                {% for day in calendar.all %}
-                                <tr>
-                                    <td>
-                                        <div style="padding: 5px 0 0 20px">
-                                            <label for="id_form-{{ forloop.counter0 }}-day">Day:&nbsp;</label><input type="date" id="{{ forloop.counter0 }}" value='{{ day.day|date:"Y-m-d" }}' disabled>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <label for="id_form-{{ forloop.counter0 }}-start_time">Start time:&nbsp;</label><input type="time" id="id_form-{{ forloop.counter0 }}-start_time" value="{{ day.start_time }}" disabled>
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                            <label for="id_form-{{ forloop.counter0 }}-end_time">End time:&nbsp;</label><input type="time" id="id_form-{{ forloop.counter0 }}-end_time" value="{{ day.end_time }}" disabled>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                                <!--li><strong>State</strong>: {{ event.state}}</li-->
-                                <tr style="vertical-align:top">
-                                    <td><strong>Tickets</strong>: </td>
-                                    <td><div style="padding: 10px">{{ tickets_trad|safe}}</div></td>
-                                </tr>
+                                <!--li><strong>State</strong>: {{ art.state}}</li-->
                             </table>
                         <!--/div-->
 
@@ -140,8 +124,8 @@
                     </div>
 
                     <div class="col-lg-4 align-items-center">
-                        {% if event.image_url %}
-                            <img src="{{ event.image_url.url }}" width="400" height="auto" >
+                        {% if art.image_url %}
+                            <img src="{{ art.image_url.url }}" width="400" height="auto" >
                         {% else %}
                             <i class="bi-card-image" style="font-size: 80px; color: #37517e; width: 400px"></i>
                         {% endif %}

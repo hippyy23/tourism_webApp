@@ -7,10 +7,10 @@
           <div class="container" data-aos="fade-up">
               <br>
               <div class="row justify-content-center">
-                    <div onclick="location.href='Art';" style="color: #47b2e4;" class="col-xl-3 col-md-6  align-items-md-stretch" data-aos="zoom-in" data-aos-delay="100">
+                    <div onclick="location.href='Art';" style="color: rgb(150, 188, 55);" class="col-xl-3 col-md-6  align-items-md-stretch" data-aos="zoom-in" data-aos-delay="100">
                         <div class="icon-box justify-content-center">
                             <div class="icon"><i class="bx bxs-landmark"></i></div>
-                            <h4>Art</h4>
+                            <h4>POI</h4>
                         </div>
                     </div>
 
@@ -25,6 +25,13 @@
                         <div class="icon-box">
                             <div class="icon"><i class="bx bx-calendar-event"></i></div>
                             <h4>Event</h4>
+                        </div>
+                    </div>
+
+                    <div onclick="location.href='Activity';" class="col-xl-3 col-md-6  align-items-md-stretch" data-aos="zoom-in" data-aos-delay="900">
+                        <div class="icon-box">
+                            <div class="icon"><i class="bx bxs-store"></i></div>
+                            <h4>Activity</h4>
                         </div>
                     </div>
               </div>
@@ -67,7 +74,7 @@
                             </div>
                             <div class="row justify-content-center">
                                 <div class="col-sm-auto">
-                                    <input type="submit" value="Filter" style="top: 0px; right: 0px; left: 0px; bottom: 0px; border:0px; letter-spacing: 1px; display: inline-block; padding: 8px 28px 10px 28px; border-radius: 50px; transition: 0.5s; margin: 10px 0 0 0; color: #fff; background: #47b2e4;">
+                                    <input type="submit" value="Filter" style="top: 0px; right: 0px; left: 0px; bottom: 0px; border:0px; letter-spacing: 1px; display: inline-block; padding: 8px 28px 10px 28px; border-radius: 50px; transition: 0.5s; margin: 10px 0 0 0; color: #fff; background: rgb(150, 188, 55);">
                                 </div>
                             </div>
                         </form>
@@ -86,8 +93,11 @@
                     {% for a in art.all %}
                         <div class="col-lg-6" onclick="location.href='/Art/{{ a.classid }}';" style="cursor: pointer;">
                             <div class="member d-flex align-items-start" >
-
-                                <img src="{{a.image_url}}" class="img-fluid" width="100" height="100" alt="">
+                                {% if a.image_url %}
+                                    <img src="{{a.image_url.url}}" class="img-fluid" width="100" height="100" alt="">
+                                {% else %}
+                                    <i class="bi-card-image" style="font-size: 80px; color: #37517e; width: 100px; height: 100px;"></i>
+                                {% endif %}
                                 <div class="member-info" style="overflow: hidden">
                                     <h4>{{ a.name_it }}</h4>
                                     <span>Categoria:

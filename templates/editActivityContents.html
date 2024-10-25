@@ -5,7 +5,7 @@
 
 <html lang="en-us" dir="ltr">
 <head>
-    <title>Edit | {{ event.name_it}}</title>
+    <title>Edit | {{ art.name_it}}</title>
 
     <!-- Favicons -->
     <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
@@ -50,10 +50,10 @@
                 <ul>
                     <li><a class="nav-link scrollto" href="/">Home</a></li>
                     {% if user.is_superuser %}
-                        <li><a class="nav-link scrollto active" href="/editEvent">Edit</a></li>
+                        <li><a class="nav-link scrollto active" href="/editActivity">Edit</a></li>
                         <li><a class="nav-link scrollto" href="/admin/">Control panel</a></li>
                     {% elif user.is_staff %}
-                        <li><a class="nav-link scrollto active" href="/editEvent">Edit</a></li>
+                        <li><a class="nav-link scrollto active" href="/editActivity">Edit</a></li>
                     {% endif %}
                     {% if user.is_authenticated %}
                         <!--li class="dropdown"><a href="#"><span><img src="{% static '/assets/img/flags/'%}{{ lang }}.jpg" alt="it" height="20" ></span> <i class="bi bi-chevron-down"></i></a>
@@ -82,7 +82,7 @@
             <div class="container">
                 <ol>
                     <li><a href="/">Home</a></li>
-                    <li><a href="/editEvent">Edit</a></li>
+                    <li><a href="/editActivity">Edit</a></li>
                     <li>Details</li>
                 </ol>
                 <ol>
@@ -90,7 +90,7 @@
                          <i class="bi-pencil-square" style="font-size: 30px;color: #37517e"></i>
                     </div>
                     <div class="col">
-                        <h2>  {{ event.name_it }}</h2>
+                        <h2>  {{ art.name_it }}</h2>
                     </div>
                 </ol>
             </div>
@@ -102,28 +102,6 @@
                     {% csrf_token %}
                     <!--input type="hidden" name="csrfmiddlewaretoken" value="XbuaKn8smwbSckX1ilWmsa5oD3aze9Y7kbyuC9ievEvHUAnekUZohVZTQTt46vAl"-->
 
-                    <div class="row justify-content-center">
-                        <div class="col-2">
-                            <label class="required" for="id_classid"><b>  Category:</b></label>
-                        </div>
-                        <div class="col">
-                            {% for cat in category.all %}
-                                <input type="checkbox" name="categoria_{{ cat.classid }}" {% if select|check:cat.classid %} checked {% endif %}>
-                                <label for="{{ cat.classid }}"> {{ cat.name_it }} </label><br>
-                            {% endfor %}
-                        </div>
-                    </div><hr width="70%">
-
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div id="content">
-                                <div class="alert alert-danger" id="msg" role="alert">
-                                    {{ message }}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-
                     <div class="row">
                         <div class="col-9">
                             {{ form.media }}
@@ -131,28 +109,28 @@
                                 <tr>
                                     <td><label class="required" for="id_classid"><b>  Cover image:</b></label></td>
                                     <td>{{ form.image_url }} <a data-bs-popper="label_info" data-popper-placement="right" title="Url dell'immagine del punto di interesse"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
+                                </tr>
 
-                                    <tr>
-                                        <td><label for="id_classid"><b>  Images:</b></label></td>
-                                        <td>{{ mediaForm.path }} <a data-bs-popper="label_info" data-popper-placement="right" title="Immagini dell'evento"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>     
-                                    </tr>
+                                <tr>
+                                    <td><label for="id_classid"><b>  Images:</b></label></td>
+                                    <td>{{ mediaForm.path }} <a data-bs-popper="label_info" data-popper-placement="right" title="Immagini dell'evento"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>     
                                 </tr>
                             </table>
                         </div>
                     </div><hr width="70%">
 
-                    {% if event.image_url or media %}
+                    {% if art.image_url or media %}
                     <div class="row">
                         <div class="col-12">
                             <table style="border-collapse:separate; border-spacing:10px; table-layout: fixed; width: 100%;">
-                                {% if event.image_url %}
+                                {% if art.image_url %}
                                 <tr>
                                     <td class="col-1"><b>Cover image: </b></td>
                                     <td>
                                         <div class="row">
                                             <div class="col-2">
-                                                <img src="{{ event.image_url.url }}" width="80%" height="auto" >
-                                                <input type="checkbox" id="{{ event.image_url }}" name="{{ event.image_url }}">
+                                                <img src="{{ art.image_url.url }}" width="80%" height="auto" >
+                                                <input type="checkbox" id="{{ art.image_url }}" name="{{ art.image_url }}">
                                             </div>
                                         </div>
                                     </td>
@@ -165,7 +143,7 @@
                                     <td>
                                         <div class="row">
                                         {% for obj in media.all %}
-                                            {% if forloop.counter|divisibleby:5 %}
+                                            {% if forloop.counter0|divisibleby:4 %}
                                                 </div>
                                                 <div class="row">
                                             {% endif %}
@@ -179,7 +157,7 @@
                                 </tr>
                                 {% endif %}
 
-                                {% if event.image_url or media %}
+                                {% if art.image_url or media %}
                                 <tr>
                                     <td></td>
                                     <td>
@@ -196,56 +174,27 @@
                     {% endif %}
 
                     <div class="row">
-                        <div class="col-10">
-                            <table style="border-collapse:separate; border-spacing:10px;">
-                                <tr>
-                                    <td><label class="required"><b>  Open time:</b></label></td>
-                                    <td id="event-days">
-                                        <input type="hidden" name="num-forms" id="id-num-forms" value="{{ calendar.count }}">
-
-                                        {% for day in calendar.all %}
-                                            <div class="calendarFormSet" id="calendar-{{ forloop.counter0 }}">
-                                                <label for="id_form-{{ forloop.counter0 }}-day">Day:&nbsp;</label><input type="date" name="{{ day.classid }}-day" id="{{ forloop.counter0 }}" value='{{ day.day|date:"Y-m-d" }}'>
-                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                                <label for="id_form-{{ forloop.counter0 }}-start_time">Start time:&nbsp;</label><input type="time" name="{{ day.classid }}-start_time" id="id_form-{{ forloop.counter0 }}-start_time" value="{{ day.start_time }}">
-                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                                <label for="id_form-{{ forloop.counter0 }}-end_time">End time:&nbsp;</label><input type="time" name="{{ day.classid }}-end_time" id="id_form-{{ forloop.counter0 }}-end_time" value="{{ day.end_time }}">
-                                                <button type="button" onclick="removeEventDay({{ forloop.counter0 }})" style="inset: 0px; border: 0px; display: inline-block; border-radius: 100%; transition: all 0.5s ease 0s; margin-left: 20px; color: rgb(255, 255, 255); background: rgb(194, 48, 46);">&#10006;</button>
-                                            </div>
-                                        {% endfor %}
-
-                                    </td>
-                                    <td>
-                                        <button type="button" onclick="addEventDay()" style="top: 0px; right: 0px; left: 0px; bottom: 0px; border:0px; display: inline-block; padding: 5px 20px 5px 20px; border-radius: 50px; transition: 0.5s; margin: 0 0 0 0; color: #fff; background: #47b2e4;">Add</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                    <hr width="70%">
-
-                    <div class="row">
                         <div class="col-9">
                             <table style="border-collapse:separate; border-spacing:10px;">
+                                 <tr>
+                                    <td><label><b> Address:</b></label></td>
+                                    <td>
+                                        {{ locationForm.address }}
+                                        <!--input type="text" name="address" value="{{ locationForm.address }}" placeholder="Indirizzo"/-->
+                                        <a data-bs-popper="label_info" data-popper-placement="right" title="Indirizzo del punto di interesse"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td></td>
+
+                                    </td>
+                                </tr>
+
                                 <tr>
-                                   <td><label><b> Address:</b></label></td>
-                                   <td>
-                                       {{ locationForm.address }}
-                                       <!--input type="text" name="address" value="{{ locationForm.address }}" placeholder="Indirizzo"/-->
-                                       <a data-bs-popper="label_info" data-popper-placement="right" title="Indirizzo del punto di interesse"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td></td>
-
-                                   </td>
-                               </tr>
-
-                               <tr>
-                                   <td><label><b> Latitude:</b></label></td>
-                                   <td>{{ locationForm.latitude }}</td>
-                                   <!--td><input type="text" name="lat" value="{{ locationForm.latitude }}" placeholder="Latitudine"/></td-->
-                                   <td><label><b> Longitude:</b></label></td>
-                                   <td>{{ locationForm.longitude }}</td>
-                                   <!--td><input type="text" name="long" value="{{ locationForm.longitude }}" placeholder="Longitudine"/></td-->
-                               </tr>
-                           </table>
+                                    <td><label><b> Latitude:</b></label></td>
+                                    <td>{{ locationForm.latitude }}</td>
+                                    <!--td><input type="text" name="lat" value="{{ locationForm.latitude }}" placeholder="Latitudine"/></td-->
+                                    <td><label><b> Longitude:</b></label></td>
+                                    <td>{{ locationForm.longitude }}</td>
+                                    <!--td><input type="text" name="long" value="{{ locationForm.longitude }}" placeholder="Longitudine"/></td-->
+                                </tr>
+                            </table>
                             <br/><br/><br/>
                             <div class="row">
                                 <div class="col-5">
@@ -334,75 +283,6 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         }).addTo(mymap);
-
-        function addEventDay() {
-            let numFormsElement = document.getElementById("id-num-forms");
-            let numForms = parseInt(numFormsElement.getAttribute("value"), 10);
-
-            let eventDaysTD = document.getElementById("event-days");
-            let divEventDay = document.createElement("div");
-            divEventDay.setAttribute("class", "calendarFormSet");
-            divEventDay.setAttribute("id", "calendar-" + numForms);
-
-            let day = document.createElement("input");
-            let dayLabel = document.createElement("label");
-            day.setAttribute("type", "date");
-            day.setAttribute("name", "form-" + numForms + "-day");
-            day.setAttribute("id", "id_form-" + numForms + "-day");
-            dayLabel.setAttribute("for", "id_form-" + numForms + "-day");
-            dayLabel.innerHTML = "Day:&nbsp;";
-
-            let startTime = document.createElement("input");
-            let startTimeLabel = document.createElement("label");
-            startTime.setAttribute("type", "time");
-            startTime.setAttribute("name", "form-" + numForms + "-start_time");
-            startTime.setAttribute("id", "id_form-" + numForms + "-start_time");
-            startTimeLabel.setAttribute("for", "id_form-" + numForms + "-start_time");
-            startTimeLabel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Start time:&nbsp;";
-
-            let endTime = document.createElement("input");
-            let endTimeLabel = document.createElement("label");
-            endTime.setAttribute("type", "time");
-            endTime.setAttribute("name", "form-" + numForms + "-end_time");
-            endTime.setAttribute("id", "id_form-" + numForms + "-end_time");
-            endTimeLabel.setAttribute("for", "id_form-" + numForms + "-end_time");
-            endTimeLabel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End time:&nbsp;";
-
-            let removeBtn = document.createElement("button");
-            let styleRemoveBtn = {'top': '0px', 'right': '0px', 'left': '0px', 'bottom': '0px', 'border': '0px', 'display': 'inline-block', 'border-radius': '100%', 
-                'transition': '0.5s', 'margin-left': '24px', 'color': '#fff', 'background': '#C2302E'}
-            Object.assign(removeBtn.style, styleRemoveBtn);
-            removeBtn.innerHTML = "&#10006;";
-            removeBtn.setAttribute("type", "button");
-            removeBtn.setAttribute("onclick", "removeEventDay(" + numForms + ")");
-
-            divEventDay.append(dayLabel, day, startTimeLabel, startTime, endTimeLabel, endTime, removeBtn);
-            eventDaysTD.appendChild(divEventDay);
-            numFormsElement.setAttribute("value", numForms + 1);
-        }
-
-        function removeEventDay(id) {
-            let divEventDay = document.getElementById("calendar-" + id);
-            divEventDay.remove();
-            let numFormsElement = document.getElementById("id-num-forms");
-            let numForms = parseInt(numFormsElement.getAttribute("value"), 10);
-            numFormsElement.setAttribute("value", numForms - 1);
-
-            let divsEventDay = document.getElementsByClassName("calendarFormSet");
-            for (let i = 1; i < numForms - 1; i++) {
-                divsEventDay[i].attributes.id.value = "calendar-" + i;
-                divsEventDay[i].children[0].attributes.for.value = "id_form-" + i + "-day";
-                divsEventDay[i].children[1].attributes.id.value = "id_form-" + i + "-day";
-                divsEventDay[i].children[1].attributes.name.value = "form-" + i + "-day";
-                divsEventDay[i].children[2].attributes.for.value = "id_form-" + i + "-start_time";
-                divsEventDay[i].children[3].attributes.id.value = "id_form-" + i + "-start_time";
-                divsEventDay[i].children[3].attributes.name.value = "form-" + i + "-start_time";
-                divsEventDay[i].children[4].attributes.for.value = "id_form-" + i + "-end_time";
-                divsEventDay[i].children[5].attributes.id.value = "id_form-" + i + "-end_time";
-                divsEventDay[i].children[5].attributes.name.value = "form-" + i + "-end_time";
-                divsEventDay[i].children[6].attributes.onclick.value = "removeEventDay(" + i + ")";
-            }
-        }
     </script>
 
 </body>

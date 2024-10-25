@@ -128,7 +128,16 @@
                     </div>
 
                     <div class="col-lg-4 align-items-center">
-                        <img src="{{ art.image_url }}" width="400" height="auto" >
+                        {% if art.image_url %}
+                            <img src="{{ art.image_url.url }}" width="400" height="auto" >
+                        {% else %}
+                            <i class="bi-card-image" style="font-size: 80px; color: #37517e; width: 400px"></i>
+                        {% endif %}
+                        {% if media %}
+                            {% for obj in media.all %}
+                                <img src="{{ obj.path.url }}" width="300" height="auto" style="padding-top: 10px;">
+                            {% endfor %}
+                        {% endif %}
                         <br><br>
                         <div id="map" style="width: 400px; height: 400px;"></div>
                     </div>

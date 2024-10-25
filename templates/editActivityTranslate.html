@@ -6,7 +6,7 @@
 
 <html lang="en-us" dir="ltr">
 <head>
-    <title>Edit | Translation |{{ event.name_it}}</title>
+    <title>Edit | Translation |{{ art.name_it}}</title>
 
     <!-- Favicons -->
     <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
@@ -41,19 +41,19 @@
                 <ul>
                     <li><a class="nav-link scrollto" href="/">Home</a></li>
                     {% if user.is_superuser %}
-                        <li><a class="nav-link scrollto active" href="/editEvent">Edit</a></li>
+                        <li><a class="nav-link scrollto active" href="/editActivity">Edit</a></li>
                         <li><a class="nav-link scrollto" href="/admin/">Control panel</a></li>
                     {% elif user.is_staff %}
-                        <li><a class="nav-link scrollto active" href="/editEvent">Edit</a></li>
+                        <li><a class="nav-link scrollto active" href="/editActivity">Edit</a></li>
                     {% endif %}
                     {% if user.is_authenticated %}
                         <li class="dropdown"><a href="#"><span><img src="{% static '/assets/img/flags/'%}{{ lang }}.jpg" alt="it" height="20" ></span> <i class="bi bi-chevron-down"></i></a>
                             <ul>
-                                <li><a href="/edit/event/translation/{{ event.classid }}" ><img src="{% static '/assets/img/flags/it.jpg' %}" alt="it" height="20" style="padding-left: 10px;">Italiano</a></li>
-                                <li><a href="/edit/event/translation/{{ event.classid }}+en" ><img src="{% static '/assets/img/flags/en.jpg' %}" alt="en" height="20" style="padding-left: 10px;">English</a></li>
-                                <li><a href="/edit/event/translation/{{ event.classid }}+es" ><img src="{% static '/assets/img/flags/es.jpg' %}" alt="es" height="20" style="padding-left: 10px;">Español</a></li>
-                                <li><a href="/edit/event/translation/{{ event.classid }}+fr" ><img src="{% static '/assets/img/flags/fr.jpg' %}" alt="fr" height="20" style="padding-left: 10px;">Français</a></li>
-                                <li><a href="/edit/event/translation/{{ event.classid }}+de" ><img src="{% static '/assets/img/flags/de.jpg' %}" alt="de" height="20" style="padding-left: 10px;">Deutsch</a></li>
+                                <li><a href="/edit/activity/translation/{{ art.classid }}" ><img src="{% static '/assets/img/flags/it.jpg' %}" alt="it" height="20" style="padding-left: 10px;">Italiano</a></li>
+                                <li><a href="/edit/activity/translation/{{ art.classid }}+en" ><img src="{% static '/assets/img/flags/en.jpg' %}" alt="en" height="20" style="padding-left: 10px;">English</a></li>
+                                <li><a href="/edit/activity/translation/{{ art.classid }}+es" ><img src="{% static '/assets/img/flags/es.jpg' %}" alt="es" height="20" style="padding-left: 10px;">Español</a></li>
+                                <li><a href="/edit/activity/translation/{{ art.classid }}+fr" ><img src="{% static '/assets/img/flags/fr.jpg' %}" alt="fr" height="20" style="padding-left: 10px;">Français</a></li>
+                                <li><a href="/edit/activity/translation/{{ art.classid }}+de" ><img src="{% static '/assets/img/flags/de.jpg' %}" alt="de" height="20" style="padding-left: 10px;">Deutsch</a></li>
                             </ul>
                         </li>
 
@@ -74,7 +74,7 @@
         <div class="container">
             <ol>
                 <li><a href="/">Home</a></li>
-                <li><a href="/editEvent">Edit</a></li>
+                <li><a href="/editActivity">Edit</a></li>
                 <li>Details</li>
                 <li><img src="{% static '/assets/img/flags/{}.jpg'|format:lang %}" alt="it" height="20" style="padding-left: 10px;"></li>
             </ol>
@@ -83,7 +83,7 @@
                      <i class="bi-pencil-square" style="font-size: 30px;color: #37517e"></i>
                 </div>
                 <div class="col">
-                    <h2>  {{ event.name_it }}</h2>
+                    <h2>  {{ art.name_it }}</h2>
                 </div>
             </ol>
         </div>
@@ -110,8 +110,8 @@
                                     </tr>
 
                                     <tr>
-                                        <td><label class="required"><b>  Tickets:</b></label></td>
-                                        <td>{{ form.tickets }}</td>
+                                        <td><label class="required"><b>  Open time:</b></label></td>
+                                        <td>{{ form.open_time }}</td>
                                     </tr>
                                 </table>
                             </div>

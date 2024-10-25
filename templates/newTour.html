@@ -34,7 +34,7 @@
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top header-inner-pages">
         <div class="container d-flex align-items-center">
-            <h1 class="logo me-auto"><a href="/">TourismApp</a></h1>
+            <h1 class="logo me-auto"><a href="/">BaldOutdoor</a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
             <nav id="navbar" class="navbar">
@@ -90,7 +90,7 @@
 
         <section class="edit-details">
             <div class="container">
-                <form method="post" class="">
+                <form method="post" class="" enctype="multipart/form-data">
                     {% csrf_token %}
 
                     <fieldset>
@@ -100,7 +100,7 @@
                                     {{ form.media }}
                                     {{ form.non_field_errors}}
                                     <tr>
-                                        <td><label><b>  Name:</b></label></td>
+                                        <td><label><b>  *Name:</b></label></td>
                                         <td>{{ form.name_it }} <a data-bs-popper="label_info" data-popper-placement="right" title="Nome del tour"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
                                     </tr>
 
@@ -115,13 +115,38 @@
                                     </tr>
 
                                     <tr>
-                                        <td><label><b>  Image Url:</b></label></td>
+                                        <td><label><b>  Cover image:</b></label></td>
                                         <td>{{ form.image_url }} <a data-bs-popper="label_info" data-popper-placement="right" title="Url dell'immagine del tour"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><label for="id_classid"><b>  Images:</b></label></td>
+                                        <td>{{ media.path }} <a data-bs-popper="label_info" data-popper-placement="right" title="Immagini del tour"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>     
                                     </tr>
 
                                     <tr>
                                         <td><label><b>  Duration:</b></label></td>
                                         <td>{{ form.duration }} <a data-bs-popper="label_info" data-popper-placement="right" title="Durata in ore del tour"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><label><b>  Distance:</b></label></td>
+                                        <td>{{ form.length }} <a data-bs-popper="label_info" data-popper-placement="right" title="Distanza totale del tour"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><label><b>  Highest altitude:</b></label></td>
+                                        <td>{{ form.max_altitude }} <a data-bs-popper="label_info" data-popper-placement="right" title="Altitudine massima del tour"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><label><b>  Elevation difference:</b></label></td>
+                                        <td>{{ form.elevation_difference }} <a data-bs-popper="label_info" data-popper-placement="right" title="Dislivello del tour"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><label><b>  PDF:</b></label></td>
+                                        <td>{{ form.filename }} <a data-bs-popper="label_info" data-popper-placement="right" title="PDF"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
                                     </tr>
                                 </table>
                             </div>
@@ -152,7 +177,7 @@
                         <div class="col-lg-6">
                             <div class="row">
                                 <div class="col">
-                                    <img src="{% static 'assets/img/logo.png' %}" style="filter: invert(100%)" height="60px"/>
+                                    <img src="{% static 'assets/img/logo.png' %}" height="60px"/>
                                 </div>
                                 <div class="col">
                                     <img src="{% static 'assets/img/logo_uni.jpg' %}" height="60px"/>

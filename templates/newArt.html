@@ -57,7 +57,7 @@
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top header-inner-pages">
         <div class="container d-flex align-items-center">
-            <h1 class="logo me-auto"><a href="/">TourismApp</a></h1>
+            <h1 class="logo me-auto"><a href="/">BaldOutdoor</a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html" class="logo me-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
             <nav id="navbar" class="navbar">
@@ -105,7 +105,7 @@
 
         <section class="edit-details">
             <div class="container">
-                <form method="post" class="">
+                <form method="post" class="" enctype="multipart/form-data">
                     {% csrf_token %}
                 <!--input type="hidden" name="csrfmiddlewaretoken" value="XbuaKn8smwbSckX1ilWmsa5oD3aze9Y7kbyuC9ievEvHUAnekUZohVZTQTt46vAl"-->
                     <div>
@@ -126,7 +126,7 @@
 
                             <table style="border-collapse:separate; border-spacing:10px;">
                                 <tr>
-                                  <td><label class="required"><b>  Name:</b></label></td>
+                                  <td><label class="required"><b>  *Name:</b></label></td>
                                   <td>{{ form.name_it }} <a data-bs-popper="label_info" data-popper-placement="right" title="Nome del punto di interesse"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
 
                                 </tr>
@@ -137,8 +137,13 @@
                                 </tr>
 
                                 <tr>
-                                  <td><label class="required"><b>  Image URL:</b></label></td>
+                                  <td><label class="required"><b>  Cover image:</b></label></td>
                                   <td>{{ form.image_url }} <a data-bs-popper="label_info" data-popper-placement="right" title="Url dell'immagine del punto di interesse"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
+                                </tr>
+
+                                <tr>
+                                    <td><label class="required" for="id_classid"><b>  Images:</b></label></td>
+                                    <td>{{ media.path }} <a data-bs-popper="label_info" data-popper-placement="right" title="Immagini del punto di interesse"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>                                    
                                 </tr>
 
                                 <tr>
@@ -151,31 +156,6 @@
                                   <td>{{ form.tickets }}</td>
                                 </tr>
 
-                                <tr>
-                                  <td><label class="required"><b>  Verona Card:</b></label></td>
-                                  <td>
-                                      <div class="related-widget-wrapper">
-                                          <select name="vc" required="" id="vc">
-                                              {% for vc in de_vc %}
-                                                <option value="{{ vc.code }}">{{ vc.name }}</option>
-                                              {% endfor %}
-                                          </select>
-                                          <a data-bs-popper="label_info" data-popper-placement="right" title="Prezzo con Verona Card"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a>
-                                      </div>
-                                  </td>
-                                </tr>
-
-                                <tr id="saving_vc_" style="display: none">
-                                  <td><label><b>  Saving VC:</b></label></td>
-                                  <td>{{ form.s_vc_perc }} <a data-bs-popper="label_info" data-popper-placement="right" title="Percentuale di sconto del biglietto se ridotto percentuale &#xA; Prezzo scontato se ridotto"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td></td>
-                                </tr>
-
-                                {% if user.is_superuser %}
-                                    <tr>
-                                      <td><label class="required"><b>  Verona Card id:</b></label></td>
-                                      <td>{{ form.vc_id }} <a data-bs-popper="label_info" data-popper-placement="right" title="Identificativo del punto di interesse per la Verona Card"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td></td>
-                                    </tr>
-                                {% endif %}
                             </table><hr width="70%">
 
                             <div class="row">
@@ -226,7 +206,7 @@
                         <div class="col-lg-6">
                             <div class="row">
                                 <div class="col">
-                                    <img src="{% static 'assets/img/logo.png' %}" style="filter: invert(100%)" height="60px"/>
+                                    <img src="{% static 'assets/img/logo.png' %}" height="60px"/>
                                 </div>
                                 <div class="col">
                                     <img src="{% static 'assets/img/logo_uni.jpg' %}" height="60px"/>
@@ -258,18 +238,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> <!-- per lo script-->
 
-    <script>
-        $('#vc').on('change', function() {
-            var selected = $(this).val();
-
-            if (selected === "01" || selected === "02") {
-                $('#saving_vc_').show();
-            }
-            else{
-                $('#saving_vc_').hide();
-            }
-        });
-    </script>
     <script>
         $(document).ready(function(){
             $('[data-toggle="label_info"]').tooltip();

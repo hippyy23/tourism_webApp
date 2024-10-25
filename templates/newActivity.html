@@ -5,7 +5,7 @@
 
 <html lang="en-us" dir="ltr">
 <head>
-    <title>New event</title>
+    <title>New point of interest</title>
     <!--<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">
     <link rel="stylesheet" type="text/css" href="/static/admin/css/nav_sidebar.css">
     <script src="/static/admin/js/nav_sidebar.js" defer=""></script>
@@ -64,10 +64,10 @@
                 <ul>
                     <li><a class="nav-link scrollto" href="/">Home</a></li>
                     {% if user.is_superuser %}
-                        <li><a class="nav-link scrollto active" href="/editEvent">Edit</a></li>
+                        <li><a class="nav-link scrollto active" href="/editActivity">Edit</a></li>
                         <li><a class="nav-link scrollto" href="/admin/">Control panel</a></li>
                     {% elif user.is_staff %}
-                        <li><a class="nav-link scrollto active" href="/editEvent">Edit</a></li>
+                        <li><a class="nav-link scrollto active" href="/editActivity">Edit</a></li>
                     {% endif %}
                     {% if user.is_authenticated %}
                         <!--li class="dropdown"><a href="#"><span><img src="{% static '/assets/img/flags/'%}{{ lang }}.jpg" alt="it" height="10" ></span> <i class="bi bi-chevron-down"></i></a>
@@ -96,10 +96,10 @@
             <div class="container">
                 <ol>
                     <li><a href="/">Home</a></li>
-                    <li><a href="/editEvent">Edit</a></li>
-                    <li>New Event</li>
+                    <li><a href="/editActivity">Edit</a></li>
+                    <li>New Activity</li>
                 </ol>
-                <h2>{{ event.name_it }}</h2>
+                <h2>{{ art.name_it }}</h2>
             </div>
         </section><!-- End Breadcrumbs -->
 
@@ -112,33 +112,11 @@
                         <fieldset>
                             {{ form.media }}
                             {{ form.non_field_errors}}
-                            <div class="row justify-content-center">
-                                <div class="col-2">
-                                    <label class="required" for="id_classid"><b>  Category:</b></label>
-                                </div>
-                                <div class="col">
-                                    {% for cat in category.all %}
-                                        <input type="checkbox" name="categoria_{{ cat.classid }}">
-                                        <label for="{{ cat.classid }}"> {{ cat.name_it }} </label><br>
-                                    {% endfor %}
-                                </div>
-                            </div><hr width="70%">
-
-                            {% if messages %}
-                                {% for message in messages %}
-                                    <div id="content">
-                                        <div class="alert alert-danger" id="msg" role="alert">
-                                            {{ message }}
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
 
                             <table style="border-collapse:separate; border-spacing:10px;">
                                 <tr>
-                                  <td><label class="required"><b>  *Name:</b></label></td>
-                                  <td>{{ form.name_it }} <a data-bs-popper="label_info" data-popper-placement="right" title="Nome del punto di interesse"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
-
+                                    <td><label class="required"><b>  *Name:</b></label></td>
+                                    <td>{{ form.name_it }} <a data-bs-popper="label_info" data-popper-placement="right" title="Nome del punto di interesse"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
                                 </tr>
 
                                 <tr>
@@ -153,31 +131,12 @@
 
                                 <tr>
                                     <td><label for="id_classid"><b>  Images:</b></label></td>
-                                    <td>{{ media.path }} <a data-bs-popper="label_info" data-popper-placement="right" title="Immagini dell'evento"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>     
+                                    <td>{{ media.path }} <a data-bs-popper="label_info" data-popper-placement="right" title="Immagini del punto di interesse"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>     
                                 </tr>
 
                                 <tr>
                                     <td><label class="required"><b>  Open time:</b></label></td>
-                                    <td id="event-days">
-                                        <input type="hidden" name="num-forms" id="id-num-forms" value="1">
-                                        <div class="calendarFormSet">
-                                            <label for="id_form-0-day">Day:</label> <input type="date" name="form-0-day" id="id_form-0-day">
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                        
-                                            <label for="id_form-0-start_time">Start time:</label> <input type="time" name="form-0-start_time" id="id_form-0-start_time">
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                        
-                                            <label for="id_form-0-end_time">End time:</label> <input type="time" name="form-0-end_time" id="id_form-0-end_time">
-                                            &nbsp;&nbsp;&nbsp;&nbsp;
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button type="button" onclick="addEventDay()" style="top: 0px; right: 0px; left: 0px; bottom: 0px; border:0px; display: inline-block; padding: 5px 20px 5px 20px; border-radius: 50px; transition: 0.5s; margin: 0 0 0 0; color: #fff; background: #47b2e4;">Add</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                  <td><label class="required"><b>  Tickets:</b></label></td>
-                                  <td>{{ form.tickets }}</td>
+                                    <td>{{ form.open_time }}</td>
                                 </tr>
 
                             </table><hr width="70%">
@@ -266,76 +225,7 @@
         $(document).ready(function(){
             $('[data-toggle="label_info"]').tooltip();
         });
-
-        function addEventDay() {
-            let numFormsElement = document.getElementById("id-num-forms");
-            let numForms = parseInt(numFormsElement.getAttribute("value"), 10);
-
-            let eventDaysTD = document.getElementById("event-days");
-            let divEventDay = document.createElement("div");
-            divEventDay.setAttribute("class", "calendarFormSet");
-            divEventDay.setAttribute("id", "calendar-" + numForms);
-
-            let day = document.createElement("input");
-            let dayLabel = document.createElement("label");
-            day.setAttribute("type", "date");
-            day.setAttribute("name", "form-" + numForms + "-day");
-            day.setAttribute("id", "id_form-" + numForms + "-day");
-            dayLabel.setAttribute("for", "id_form-" + numForms + "-day");
-            dayLabel.innerHTML = "Day:&nbsp;";
-
-            let startTime = document.createElement("input");
-            let startTimeLabel = document.createElement("label");
-            startTime.setAttribute("type", "time");
-            startTime.setAttribute("name", "form-" + numForms + "-start_time");
-            startTime.setAttribute("id", "id_form-" + numForms + "-start_time");
-            startTimeLabel.setAttribute("for", "id_form-" + numForms + "-start_time");
-            startTimeLabel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Start time:&nbsp;";
-
-            let endTime = document.createElement("input");
-            let endTimeLabel = document.createElement("label");
-            endTime.setAttribute("type", "time");
-            endTime.setAttribute("name", "form-" + numForms + "-end-time");
-            endTime.setAttribute("id", "id_form-" + numForms + "-end-time");
-            endTimeLabel.setAttribute("for", "id_form-" + numForms + "-end-time");
-            endTimeLabel.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End time:&nbsp;";
-
-            let removeBtn = document.createElement("button");
-            let styleRemoveBtn = {'top': '0px', 'right': '0px', 'left': '0px', 'bottom': '0px', 'border': '0px', 'display': 'inline-block', 'border-radius': '100%', 
-                'transition': '0.5s', 'margin-left': '20px', 'color': '#fff', 'background': '#C2302E'}
-            Object.assign(removeBtn.style, styleRemoveBtn);
-            removeBtn.innerHTML = "&#10006;";
-            removeBtn.setAttribute("type", "button");
-            removeBtn.setAttribute("onclick", "removeEventDay(" + numForms + ")");
-
-            divEventDay.append(dayLabel, day, startTimeLabel, startTime, endTimeLabel, endTime, removeBtn);
-            eventDaysTD.appendChild(divEventDay);
-            numFormsElement.setAttribute("value", numForms + 1);
-        }
-
-        function removeEventDay(id) {
-            let divEventDay = document.getElementById("calendar-" + id);
-            divEventDay.remove();
-            let numFormsElement = document.getElementById("id-num-forms");
-            let numForms = parseInt(numFormsElement.getAttribute("value"), 10);
-            numFormsElement.setAttribute("value", numForms - 1);
-
-            let divsEventDay = document.getElementsByClassName("calendarFormSet");
-            for (let i = 1; i < numForms - 1; i++) {
-                divsEventDay[i].attributes.id.value = "calendar-" + i;
-                divsEventDay[i].children[0].attributes.for.value = "id_form-" + i + "-day";
-                divsEventDay[i].children[1].attributes.id.value = "id_form-" + i + "-day";
-                divsEventDay[i].children[1].attributes.name.value = "form-" + i + "-day";
-                divsEventDay[i].children[2].attributes.for.value = "id_form-" + i + "-start_time";
-                divsEventDay[i].children[3].attributes.id.value = "id_form-" + i + "-start_time";
-                divsEventDay[i].children[3].attributes.name.value = "form-" + i + "-start_time";
-                divsEventDay[i].children[4].attributes.for.value = "id_form-" + i + "-end_time";
-                divsEventDay[i].children[5].attributes.id.value = "id_form-" + i + "-end_time";
-                divsEventDay[i].children[5].attributes.name.value = "form-" + i + "-end_time";
-                divsEventDay[i].children[6].attributes.onclick.value = "removeEventDay(" + i + ")";
-            }
-        }
     </script>
 
 </body>
-</html>;
+</html>
