@@ -7,6 +7,21 @@ from djrichtextfield.widgets import RichTextWidget
 from django.db.models import CheckConstraint, Q, UniqueConstraint
 from django.forms import ModelForm
 
+
+class DArtEStato(models.Model):
+    code = models.CharField(primary_key=True, max_length=80)
+    name = models.CharField(max_length=160, blank=True, null=True)
+    definition = models.CharField(max_length=1200, blank=True, null=True)
+    alphacode = models.CharField(max_length=80, blank=True, null=True)
+
+    def __str__(self):
+        return '{}'.format(self.name)
+
+    class Meta:
+        managed = False
+        db_table = 'd_art_e_stato'
+
+
 class AArtCategoryArtCategory(models.Model):
     category = models.ForeignKey('ArtCategory', models.DO_NOTHING, db_column='category')
     points = models.ForeignKey('Art', models.DO_NOTHING, db_column='points')
@@ -51,17 +66,13 @@ class Art(models.Model):
     classid = models.CharField(primary_key=True, max_length=70)
     #descr_it = models.TextField(blank=True, null=True)
     descr_it = RichTextField(blank=True, null=True)
-    image_url = models.CharField(max_length=200, blank=True, null=True)
     name_it = models.CharField(max_length=100)
-    state = models.ForeignKey('DArtEStato', models.DO_NOTHING, db_column='state')
+    image_url = models.ImageField(max_length=200, blank=True, null=True, upload_to='images/')
+    state = models.ForeignKey('DArtEStato', models.DO_NOTHING, db_column='state', default=DArtEStato.objects.get(name='attivo'))
     area_di_download = models.MultiPolygonField(srid=4326, null=True)
-    notes = models.CharField(max_length=1024, blank=True, null=True)
     open_time = RichTextField(blank=True, null=True)
     tickets = RichTextField(blank=True, null=True)
     rss = models.CharField(max_length=30, blank=True, null=True)
-    saving_vc = models.FloatField(default=0.0)
-    vc = models.CharField(max_length=80, default='03')
-    vc_id = models.CharField(max_length=70, blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.name_it)
@@ -69,22 +80,6 @@ class Art(models.Model):
     class Meta:
         managed = False
         db_table = 'art'
-
-
-class ArtCapacity(models.Model):
-    classid = models.CharField(primary_key=True, max_length=70)
-    end_date = models.DateField(null=True, blank=True)
-    poi_cap = models.DecimalField(decimal_places=0,max_digits=15)
-    start_date = models.DateField()
-    poi = models.ForeignKey(Art, models.DO_NOTHING, db_column='poi', blank=True, null=True)
-
-    def __str__(self):
-        return '{}, {}'.format(self.start_date, self.poi)
-
-    class Meta:
-        managed = False
-        db_table = 'art_capacity'
-        unique_together = (('start_date','poi'),)
 
 
 class ArtCategory(models.Model):
@@ -155,78 +150,6 @@ class ArtTradT(models.Model):
         managed = False
         db_table = 'art_trad_t'
 
-class ArtVisitingTime(models.Model):
-    classid = models.CharField(primary_key=True, max_length=70)
-    end_date = models.DateField(null=True, blank=True)
-    poi_visiting_time = models.DecimalField(decimal_places=0,max_digits=15)
-    start_date = models.DateField()
-    poi = models.ForeignKey(Art, models.DO_NOTHING, db_column='poi', blank=True, null=True)
-
-    def __str__(self):
-        return '{}, {}'.format(self.start_date, self.poi)
-
-    class Meta:
-        managed = False
-        db_table = 'art_visiting_time'
-        unique_together = (('start_date','poi'),)
-
-
-class BenefitVc(models.Model):
-    classid = models.CharField(primary_key=True, max_length=70)
-    benefit = models.CharField(max_length=1024)
-    descr = models.CharField(max_length=2048)
-    title = models.CharField(max_length=1024)
-
-
-    def __str__(self):
-        return '{}'.format(self.classid)
-
-    class Meta:
-        managed = False
-        db_table = 'benefit_vc'
-
-
-class BenefitVcBenefitTradT(models.Model):
-    classref = models.ForeignKey(BenefitVc, models.DO_NOTHING, db_column='classref')
-    benefit_trad_lang = models.ForeignKey('DELang', models.DO_NOTHING, db_column='benefit_trad_lang')
-    benefit_trad_value = models.CharField(max_length=16384)
-
-    def __str__(self):
-        return '{}, {}, {}'.format(self.classref, self.benefit_trad_lang, self.benefit_trad_value)
-
-    class Meta:
-        managed = False
-        db_table = 'benefit_vc_benefit_trad_t'
-        unique_together = (('classref', 'benefit_trad_lang', 'benefit_trad_value'),)
-
-
-class BenefitVcDescrTradT(models.Model):
-    classref = models.ForeignKey(BenefitVc, models.DO_NOTHING, db_column='classref')
-    descr_trad_lang = models.ForeignKey('DELang', models.DO_NOTHING, db_column='descr_trad_lang')
-    descr_trad_value = models.CharField(max_length=16384)
-
-    def __str__(self):
-        return '{}, {}, {}'.format(self.classref, self.descr_trad_lang, self.descr_trad_value)
-
-    class Meta:
-        managed = False
-        db_table = 'benefit_vc_descr_trad_t'
-        unique_together = (('classref', 'descr_trad_lang', 'descr_trad_value'),)
-
-
-class BenefitVcTitleTradT(models.Model):
-    classref = models.ForeignKey(BenefitVc, models.DO_NOTHING, db_column='classref')
-    title_trad_lang = models.ForeignKey('DELang', models.DO_NOTHING, db_column='title_trad_lang')
-    title_trad_value = models.CharField(max_length=16384)
-
-    def __str__(self):
-        return '{}, {}, {}'.format(self.classref, self.title_trad_lang, self.title_trad_value)
-
-    class Meta:
-        managed = False
-        db_table = 'benefit_vc_title_trad_t'
-        unique_together = (('classref', 'title_trad_lang', 'title_trad_value'),)
-
 
 class Calendar(models.Model):
     classid = models.CharField(primary_key=True, max_length=70)
@@ -243,36 +166,6 @@ class Calendar(models.Model):
         db_table = 'calendar'
         unique_together = (('day', 'event'),)
 
-class Crowding(models.Model):
-    classid = models.AutoField(primary_key=True)
-    data = models.DateTimeField()
-    date_creat = models.DateTimeField()
-    val_real = models.FloatField(null=True, blank=True)
-    val_stim = models.FloatField(null=True, blank=True)
-    val_stor = models.FloatField(null=True, blank=True)
-    punto_di_interesse = models.ForeignKey('Art', models.DO_NOTHING, db_column='punto_di_interesse')
-
-    def __str__(self):
-        return '{}, {}'.format(self.date_creat, self.punto_di_interesse)
-
-    class Meta:
-        managed = False
-        db_table = 'crowding'
-        unique_together = (('date_creat', 'punto_di_interesse'),)
-
-class DArtEStato(models.Model):
-    code = models.CharField(primary_key=True, max_length=80)
-    name = models.CharField(max_length=160, blank=True, null=True)
-    definition = models.CharField(max_length=1200, blank=True, null=True)
-    alphacode = models.CharField(max_length=80, blank=True, null=True)
-
-    def __str__(self):
-        return '{}'.format(self.name)
-
-    class Meta:
-        managed = False
-        db_table = 'd_art_e_stato'
-
 
 class DELang(models.Model):
     code = models.CharField(primary_key=True, max_length=80)
@@ -286,20 +179,6 @@ class DELang(models.Model):
     class Meta:
         managed = False
         db_table = 'd_e_lang'
-
-
-class DEVc(models.Model):
-    code = models.CharField(primary_key=True, max_length=80)
-    name = models.CharField(max_length=160, blank=True, null=True)
-    definition = models.CharField(max_length=1200, blank=True, null=True)
-    alphacode = models.CharField(max_length=80, blank=True, null=True)
-
-    def __str__(self):
-        return '{}'.format(self.name)
-
-    class Meta:
-        managed = False
-        db_table = 'd_e_vc'
 
 
 class DMediaETipomm(models.Model):
@@ -346,14 +225,12 @@ class DTourETipoit(models.Model):
 
 class Event(models.Model):
     classid = models.CharField(primary_key=True, max_length=70)
-    descr_it = models.TextField(blank=True, null=True)
-    image_url = models.CharField(max_length=200, blank=True, null=True)
-    name_it = models.CharField(max_length=512)
-    state = models.ForeignKey(DArtEStato, models.DO_NOTHING, db_column='state')
-    source_rss = models.ForeignKey('Rss', models.DO_NOTHING, db_column='source_rss')
+    descr_it = RichTextField(blank=True, null=True)
+    image_url = models.ImageField(max_length=200, blank=True, null=True, upload_to='images/')
+    name_it = models.CharField(max_length=100)
+    state = models.ForeignKey('DArtEStato', models.DO_NOTHING, db_column='state', default=DArtEStato.objects.get(name='attivo'))
     notes = models.CharField(max_length=1024, blank=True, null=True)
-    open_time = models.CharField(max_length=1024, blank=True, null=True)
-    tickets = models.CharField(max_length=1024, blank=True, null=True)
+    tickets = RichTextField(blank=True, null=True)
 
     def __str__(self):
         return '{}'.format(self.name_it)
@@ -416,10 +293,23 @@ class EventNameTradT(models.Model):
         db_table = 'event_name_trad_t'
         unique_together = (('classref', 'name_trad_lang', 'name_trad_value'),)
 
+class EventTradT(models.Model):
+    classref = models.ForeignKey(Event, models.DO_NOTHING, db_column='classref', blank=True, null=True)
+    lang = models.CharField(max_length=80, blank=True, null=True)
+    notes_trad = models.CharField(max_length=16384, blank=True, null=True)
+    open_time_trad = RichTextField(max_length=16384, blank=True, null=True)
+    tickets_trad = RichTextField(max_length=16384, blank=True, null=True)
+
+    def __str__(self):
+        return '{}, {}'.format(self.classref, self.lang)
+
+    class Meta:
+        managed = False
+        db_table = 'art_trad_t'
 
 class Gallery(models.Model):
     classid = models.CharField(primary_key=True, max_length=70)
-    image_url = models.CharField(max_length=1024)
+    path = models.ImageField(max_length=1024, blank=True, null=True, upload_to='images/')
     linked_event = models.ForeignKey(Event, models.DO_NOTHING, db_column='linked_event', blank=True, null=True)
 
     def __str__(self):
@@ -445,42 +335,11 @@ class Location(models.Model):
         db_table = 'location'
         unique_together = (('num', 'event'),)
 
-class LogCrowd(models.Model):
-    classid = models.AutoField(primary_key=True)
-    data = models.DateTimeField()
-    data_creat = models.DateTimeField()
-    val_real = models.FloatField(null=True, blank=True)
-    val_stim = models.FloatField(null=True, blank=True)
-    val_stor = models.FloatField(null=True, blank=True)
-    poi = models.ForeignKey(Art, models.DO_NOTHING, db_column='poi')
-
-    def __str__(self):
-        return '{}'.format(self.classid)
-
-    class Meta:
-        managed = False
-        db_table = 'log_crowd'
-        unique_together = (('data_creat', 'poi'),)
-
-class LogVc(models.Model):
-    classid = models.AutoField(primary_key=True)
-    attivazione = models.DateField()
-    id_vc = models.CharField(max_length=40)
-    istante = models.CharField(max_length=19)
-    profilo = models.CharField(max_length=40)
-    poi = models.ForeignKey(Art, models.DO_NOTHING, db_column='poi')
-
-    def __str__(self):
-        return '{}'.format(self.classid)
-
-    class Meta:
-        managed = False
-        db_table = 'log_vc'
 
 class Media(models.Model):
     classid = models.CharField(primary_key=True, max_length=70)
     name_it = models.CharField(max_length=200)
-    path = models.CharField(max_length=200)
+    path = models.ImageField(max_length=200, blank=True, null=True, upload_to='images/')
     type = models.ForeignKey(DMediaETipomm, models.DO_NOTHING, db_column='type')
     art = models.ForeignKey(Art, models.DO_NOTHING, db_column='art')
 
@@ -549,47 +408,6 @@ class NewsTitleTradT(models.Model):
         managed = False
         db_table = 'news_title_trad_t'
         unique_together = (('classref', 'title_trad_lang', 'title_trad_value'),)
-
-
-class RetailerCategory(models.Model):
-    classid = models.CharField(primary_key=True, max_length=70)
-    name_it = models.CharField(max_length=1024)
-
-    def __str__(self):
-        return '{}'.format(self.name_it)
-
-    class Meta:
-        managed = False
-        db_table = 'retailer_category'
-
-
-class RetailerCategoryNameTradT(models.Model):
-    classref = models.ForeignKey(RetailerCategory, models.DO_NOTHING, db_column='classref')
-    name_trad_lang = models.ForeignKey(DELang, models.DO_NOTHING, db_column='name_trad_lang')
-    name_trad_value = models.CharField(max_length=16384)
-
-    def __str__(self):
-        return '{}, {}, {}'.format(self.classref, self.name_trad_lang, self.name_trad_value)
-
-    class Meta:
-        managed = False
-        db_table = 'retailer_category_name_trad_t'
-        unique_together = (('classref', 'name_trad_lang', 'name_trad_value'),)
-
-
-class RetailerVc(models.Model):
-    classid = models.CharField(primary_key=True, max_length=70)
-    address = models.CharField(max_length=2048)
-    name = models.CharField(max_length=1024)
-    retailer_category = models.ForeignKey(RetailerCategory, models.DO_NOTHING, db_column='retailer_category')
-    geo = models.PointField(srid=4326, null=True)
-
-    def __str__(self):
-        return '{}'.format(self.address)
-
-    class Meta:
-        managed = False
-        db_table = 'retailer_vc'
 
 
 class Rss(models.Model):
@@ -719,13 +537,16 @@ class SpatialRefSys(models.Model):
 class Tour(models.Model):
     classid = models.CharField(primary_key=True, max_length=70)
     descr_it = RichTextField(max_length=8192)
-    image_url = models.CharField(max_length=100, blank=True, null=True)
+    image_url = models.ImageField(max_length=100, blank=True, null=True, upload_to='images/')
     kml_path = models.CharField(max_length=8192, blank=True, null=True)
     name_it = models.CharField(max_length=200)
     geom_path = models.MultiLineStringField(srid=4326, null=True)
     proximity_area = models.MultiPolygonField(srid=4326, null=True)
     duration = models.FloatField(blank=True, null=True)
     length = models.FloatField(blank=True, null=True)
+    max_altitude = models.FloatField(blank=True, null=True)
+    elevation_difference = models.FloatField(blank=True, null=True)
+    filename = models.FileField(max_length=255, blank=True, null=True, upload_to='schede/')
     type = models.ForeignKey(DTourETipoit, models.DO_NOTHING, db_column='type', blank=True, null=True)
 
     def __str__(self):
@@ -761,3 +582,15 @@ class TourNameTradT(models.Model):
         managed = False
         db_table = 'tour_name_trad_t'
         unique_together = (('classref', 'name_trad_lang', 'name_trad_value'),)
+
+class TourMedia(models.Model):
+    classid = models.CharField(primary_key=True, max_length=70)
+    path = models.ImageField(max_length=1024, blank=True, null=True, upload_to='images/')
+    tour = models.ForeignKey(Tour, models.DO_NOTHING, db_column='tour', blank=True, null=True)
+
+    def __str__(self):
+        return '{}'.format(self.classid)
+
+    class Meta:
+        managed = False
+        db_table = 'media_tour'
