@@ -252,7 +252,11 @@
                                     <!--p class="deletelink-box" style="letter-spacing: 1px; display: inline-block; padding: 10px 28px 11px 28px; border-radius: 50px; transition: 0.5s; margin: 10px 0 0 0; color: white; background: #C2302E;">
                                         <a href="/admin/tourismApp/art/79/delete/" class="deletelink">Delete</a>
                                     </p-->
-                                    <input type="submit" value="Delete" class="default" name="_delete" style="  top: 0px; right: 0px; bottom: 0px; border:0px; letter-spacing: 1px; display: inline-block; padding: 10px 28px 11px 28px; border-radius: 50px; transition: 0.5s; margin: 10px 0 0 0; color: #fff; background: #C2302E;">
+                                    {% if event.state|stringformat:"s" == "attivo" %}
+                                        <input type="submit" value="Delete" class="default" name="_delete" style="  top: 0px; right: 0px; bottom: 0px; border:0px; letter-spacing: 1px; display: inline-block; padding: 10px 28px 11px 28px; border-radius: 50px; transition: 0.5s; margin: 10px 0 0 0; color: #fff; background: #C2302E;">
+                                    {% else %}
+                                        <input type="submit" value="Restore" class="default" name="_restore" style="  top: 0px; right: 0px; bottom: 0px; border:0px; letter-spacing: 1px; display: inline-block; padding: 10px 28px 11px 28px; border-radius: 50px; transition: 0.5s; margin: 10px 0 0 0; color: #fff; background: #390C;">
+                                    {% endif %}
                                 </div>
 
                                 <div class="col">
