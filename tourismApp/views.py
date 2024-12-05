@@ -156,7 +156,7 @@ def itemEvent(request,classid_lang):
     if lang == 'it':
         descr_trad = event.descr_it
         name_trad = event.name_it
-        # tickets_trad = event.tickets
+        tickets_trad = event.tickets
         # open_time_trad = event.open_time
     else:
         lang_table = DELang.objects.get(code=lang)
@@ -170,13 +170,11 @@ def itemEvent(request,classid_lang):
         except:
             name_trad = event.name_it
 
-        # try:
-        #     trad = ArtTradT.objects.get(classref=event.classid, lang=lang_table.code)
-        #     tickets_trad = trad.tickets_trad
-        #     open_time_trad = trad.open_time_trad
-        # except:
-        #     tickets_trad = '<b style="color:red;">Non ancora tradotto in {}</b>'.format(lang_table.name)
-        #     open_time_trad = '<b style="color:red;">Non ancora tradotto in {}</b>'.format(lang_table.name)
+        try:
+            trad = ArtTradT.objects.get(classref=event.classid, lang=lang_table.code)
+            tickets_trad = trad.tickets_trad
+        except:
+            tickets_trad = '<b style="color:red;">Non ancora tradotto in {}</b>'.format(lang_table.name)
 
     try:
         location = Location.objects.get(event=event.classid, num='1')
@@ -194,8 +192,7 @@ def itemEvent(request,classid_lang):
         'name_trad' : name_trad,
         'calendar': calendar,
         'media': Gallery.objects.filter(linked_event=event),
-        # 'tickets_trad': tickets_trad,
-        # 'open_time_trad': open_time_trad,
+        'tickets_trad': tickets_trad,
         'latitude': latitude,
         'longitude': longitude,
         'address': address,
@@ -358,6 +355,12 @@ def editPoI1(request, classid):
             art.state = DArtEStato.objects.get(code='02')
             art.save()
             return redirect('editArt')
+        
+        if '_restore' in request.POST:
+            art = Art.objects.get(classid=classid)
+            art.state = DArtEStato.objects.get(code='01')
+            art.save()
+            return redirect('editArt')
 
         if '_delete_media' in request.POST:
             if art.image_url in request.POST:
@@ -407,7 +410,7 @@ def editPoI1(request, classid):
                         if select[c]:
                             AArtCategoryArtCategory.objects.get(points=art, category=ArtCategory.objects.get(classid=str(c))).delete()
 
-        if '_delete_media' not in request.POST:
+        if '_delete_media' and '_restore' not in request.POST:
             return redirect('/edit/translation/{}'.format(classid))
 
     context = {
@@ -434,15 +437,12 @@ def editPoI2(request, classid_lang):
         de_lang = DELang.objects.get(code=lang)
 
     art = Art.objects.get(classid=classid)
-    print("Classid: " + art.classid + " " + classid)
-    print("Descr: " + art.descr_it)
-    print("Open time: " + art.open_time)
-    print("Art: " + art.tickets)
 
     if lang == 'it':
         descr = art.descr_it
         name = art.name_it
         tickets = art.tickets
+        link = art.link
         open_time = art.open_time
         #notes = art.notes
         translated = True
@@ -627,6 +627,17 @@ def editOneTour(request, classid_lang):
     form = TourForm(request.POST or None, request.FILES or None, instance=tour)
 
     if request.method == "POST":
+        if '_delete' in request.POST:
+            tour.state = DArtEStato.objects.get(code='02')
+            tour.save()
+            return redirect('editTour')
+        
+        if '_restore' in request.POST:
+            tour = Tour.objects.get(classid=classid)
+            tour.state = DArtEStato.objects.get(code='01')
+            tour.save()
+            return redirect('editTour')
+
         if '_delete_media' in request.POST:
             if tour.image_url in request.POST:
                 Tour.objects.filter(classid=classid).update(image_url=None)
@@ -806,6 +817,12 @@ def editEvent1(request, classid):
         if '_delete' in request.POST:
             event = Event.objects.get(classid=classid)
             event.state = DArtEStato.objects.get(code='02')
+            event.save()
+            return redirect('editEvent')
+        
+        if '_restore' in request.POST:
+            event = Event.objects.get(classid=classid)
+            event.state = DArtEStato.objects.get(code='01')
             event.save()
             return redirect('editEvent')
         
@@ -1019,7 +1036,6 @@ def editEvent2(request, classid_lang):
             #notes = None
 
     if request.method == 'POST':
-
         form = EventForm_Trad(request.POST)
 
         if form.is_valid():
@@ -1132,6 +1148,12 @@ def editActivity1(request, classid):
         if '_delete' in request.POST:
             art = Art.objects.get(classid=classid)
             art.state = DArtEStato.objects.get(code='02')
+            art.save()
+            return redirect('editArt')
+        
+        if '_restore' in request.POST:
+            art = Art.objects.get(classid=classid)
+            art.state = DArtEStato.objects.get(code='01')
             art.save()
             return redirect('editArt')
 
@@ -1405,7 +1427,7 @@ def filterItemArt(request):
     return render(request, 'filterArt.html', context)
 
 def filterItemTour(request):
-    select = [True, True, True]
+    select = [True, True, True, True, True]
     if request.method == 'POST':
         tour = Tour.objects.none()
 
@@ -1427,6 +1449,18 @@ def filterItemTour(request):
         else:
             select[2] = False
 
+        if 'attivo' and not 'eliminato' in request.POST:
+            select[3] = True
+            tour = tour.filter(state='01')
+        elif 'eliminato' and not 'attivo' in request.POST:
+            select[3] = False
+
+        if 'eliminato' and not 'attivo' in request.POST:
+            select[4] = True
+            tour = tour.filter(state='02')
+        elif 'attivo' and not 'eliminato' in request.POST:
+            select[4] = False
+
         context = {
             'tour': tour,
             'select': select,
@@ -1442,8 +1476,8 @@ def filterItemTour(request):
 def filterItemEvent(request):
     category_db = EventCategory.objects.order_by('classid')
     select = [None, True, True, True, True, True]
-    if request.method == 'POST':
 
+    if request.method == 'POST':
         category = EventCategory.objects.none()
         category_t = AEventCategoryEventCategory.objects.none()
         state = DArtEStato.objects.none()
@@ -1482,6 +1516,7 @@ def filterItemEvent(request):
                 event |= new_event.filter(state='02')
             elif select[4]:
                 event |= new_event.filter(state='01')
+
         context = {
             'event': event,
             'category_t': category_t,
