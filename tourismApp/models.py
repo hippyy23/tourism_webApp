@@ -64,7 +64,6 @@ class AEventCategoryEventCategory(models.Model):
 
 class Art(models.Model):
     classid = models.CharField(primary_key=True, max_length=70)
-    #descr_it = models.TextField(blank=True, null=True)
     descr_it = RichTextField(blank=True, null=True)
     name_it = models.CharField(max_length=100)
     image_url = models.ImageField(max_length=200, blank=True, null=True, upload_to='images/')
@@ -72,6 +71,7 @@ class Art(models.Model):
     area_di_download = models.MultiPolygonField(srid=4326, null=True)
     open_time = RichTextField(blank=True, null=True)
     tickets = RichTextField(blank=True, null=True)
+    link = RichTextField(blank=True, null=True)
     rss = models.CharField(max_length=30, blank=True, null=True)
 
     def __str__(self):
@@ -179,20 +179,6 @@ class DELang(models.Model):
     class Meta:
         managed = False
         db_table = 'd_e_lang'
-
-
-class DMediaETipomm(models.Model):
-    code = models.CharField(primary_key=True, max_length=80)
-    name = models.CharField(max_length=160, blank=True, null=True)
-    definition = models.CharField(max_length=1200, blank=True, null=True)
-    alphacode = models.CharField(max_length=80, blank=True, null=True)
-
-    def __str__(self):
-        return '{}'.format(self.name)
-
-    class Meta:
-        managed = False
-        db_table = 'd_media_e_tipomm'
 
 
 class DRssEState(models.Model):
@@ -307,7 +293,7 @@ class EventTradT(models.Model):
         managed = False
         db_table = 'art_trad_t'
 
-class Gallery(models.Model):
+class EventMedia(models.Model):
     classid = models.CharField(primary_key=True, max_length=70)
     path = models.ImageField(max_length=1024, blank=True, null=True, upload_to='images/')
     linked_event = models.ForeignKey(Event, models.DO_NOTHING, db_column='linked_event', blank=True, null=True)
@@ -317,7 +303,7 @@ class Gallery(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'gallery'
+        db_table = 'event_media'
 
 
 class Location(models.Model):
@@ -336,11 +322,9 @@ class Location(models.Model):
         unique_together = (('num', 'event'),)
 
 
-class Media(models.Model):
+class ArtMedia(models.Model):
     classid = models.CharField(primary_key=True, max_length=70)
-    name_it = models.CharField(max_length=200)
     path = models.ImageField(max_length=200, blank=True, null=True, upload_to='images/')
-    type = models.ForeignKey(DMediaETipomm, models.DO_NOTHING, db_column='type')
     art = models.ForeignKey(Art, models.DO_NOTHING, db_column='art')
 
     def __str__(self):
@@ -348,22 +332,7 @@ class Media(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'media'
-        unique_together = (('name_it', 'art'),)
-
-
-class MediaNameTradT(models.Model):
-    classref = models.ForeignKey(Media, models.DO_NOTHING, db_column='classref')
-    name_trad_lang = models.ForeignKey(DELang, models.DO_NOTHING, db_column='name_trad_lang')
-    name_trad_value = models.CharField(max_length=16384, blank=True, null=True)
-
-    def __str__(self):
-        return '{}, {}'.format(self.classref, self.name_trad_lang)
-
-    class Meta:
-        managed = False
-        db_table = 'media_name_trad_t'
-        unique_together = (('classref', 'name_trad_lang'),)
+        db_table = 'art_media'
 
 
 class News(models.Model):
@@ -548,6 +517,7 @@ class Tour(models.Model):
     elevation_difference = models.FloatField(blank=True, null=True)
     filename = models.FileField(max_length=255, blank=True, null=True, upload_to='schede/')
     type = models.ForeignKey(DTourETipoit, models.DO_NOTHING, db_column='type', blank=True, null=True)
+    state = models.ForeignKey('DArtEStato', models.DO_NOTHING, db_column='state', default=DArtEStato.objects.get(name='attivo'))
 
     def __str__(self):
         return '{}'.format(self.name_it)
@@ -593,4 +563,4 @@ class TourMedia(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'media_tour'
+        db_table = 'tour_media'
