@@ -82,7 +82,7 @@ def itemPoI(request,classid_lang):
         'latitude': latitude,
         'longitude': longitude,
         'address': address,
-        'media': Media.objects.filter(art=art)
+        'media': ArtMedia.objects.filter(art=art)
     }
 
     return render(request,'art-details.html', context)
@@ -191,7 +191,7 @@ def itemEvent(request,classid_lang):
         'descr_trad' : descr_trad,
         'name_trad' : name_trad,
         'calendar': calendar,
-        'media': Gallery.objects.filter(linked_event=event),
+        'media': EventMedia.objects.filter(linked_event=event),
         'tickets_trad': tickets_trad,
         'latitude': latitude,
         'longitude': longitude,
@@ -261,7 +261,7 @@ def itemActivity(request,classid_lang):
         'latitude': latitude,
         'longitude': longitude,
         'address': address,
-        'media': Media.objects.filter(art=art)
+        'media': ArtMedia.objects.filter(art=art)
     }
 
     return render(request,'activity-details.html', context)
@@ -345,7 +345,6 @@ def editPoI1(request, classid):
                 address = ""
                 break
 
-
     if request.method == 'POST':
         form = ArtForm_data(request.POST, request.FILES, instance=art)
         locationForm = LocationForm(request.POST)
@@ -367,10 +366,10 @@ def editPoI1(request, classid):
                 art = Art.objects.get(classid=classid)
                 art.image_url = None
                 art.save()
-            media = Media.objects.filter(art=classid)
+            media = ArtMedia.objects.filter(art=classid)
             for obj in media:
                 if obj.path in request.POST:
-                    Media.objects.filter(path=obj.path).delete()
+                    ArtMedia.objects.filter(path=obj.path).delete()
 
         if form.is_valid() and locationForm.is_valid() and '_delete_media' not in request.POST and '_delete' not in request.POST:
             address = locationForm.cleaned_data['address']
@@ -383,9 +382,9 @@ def editPoI1(request, classid):
                 while True:
                     try:
                         id = "".join(random.choices(string.digits, k=6))
-                        Media.objects.get(classid=id)
+                        ArtMedia.objects.get(classid=id)
                     except:
-                        media = Media.objects.create(classid=id, type=DMediaETipomm(code='image'), path=file, art=art)
+                        media = ArtMedia.objects.create(classid=id, path=file, art=art)
                         media.save()
                         break
 
@@ -417,9 +416,9 @@ def editPoI1(request, classid):
         'art' : art,
         'category': category,
         'select': select,
-        'form' : ArtForm_data(initial={'image_url': art.image_url}),
+        'form' : ArtForm_data(initial={'image_url': art.image_url, 'link': art.link}),
         'mediaForm' : ArtMediaForm(),
-        'media' : Media.objects.filter(art=art),
+        'media' : ArtMedia.objects.filter(art=art),
         'locationForm': LocationForm(initial={'address': address, 'latitude':latitude, 'longitude': longitude}),
         'address': address,
         'latitude': latitude,
@@ -442,7 +441,6 @@ def editPoI2(request, classid_lang):
         descr = art.descr_it
         name = art.name_it
         tickets = art.tickets
-        link = art.link
         open_time = art.open_time
         #notes = art.notes
         translated = True
@@ -492,7 +490,6 @@ def editPoI2(request, classid_lang):
             #notes = None
 
     if request.method == 'POST':
-
         form = ArtForm_Trad(request.POST)
 
         if form.is_valid():
@@ -831,10 +828,10 @@ def editEvent1(request, classid):
                 Event.objects.get(classid=classid)
                 event.image_url = None
                 event.save()
-            media = Gallery.objects.filter(linked_event=classid)
+            media = EventMedia.objects.filter(linked_event=classid)
             for obj in media:
                 if obj.path in request.POST:
-                    Gallery.objects.filter(path=obj.path).delete()
+                    EventMedia.objects.filter(path=obj.path).delete()
 
         if form.is_valid() and locationForm.is_valid() and '_delete_media' not in request.POST and '_delete' not in request.POST:
             # notes = form.cleaned_data['notes']
@@ -862,9 +859,9 @@ def editEvent1(request, classid):
                     while True:
                         try:
                             id = "".join(random.choices(string.digits, k=6))
-                            Gallery.objects.get(classid=id)
+                            EventMedia.objects.get(classid=id)
                         except:
-                            media = Gallery.objects.create(classid=id, path=file, linked_event=event)
+                            media = EventMedia.objects.create(classid=id, path=file, linked_event=event)
                             media.save()
                             break
 
@@ -901,7 +898,7 @@ def editEvent1(request, classid):
                                     'select': select,
                                     'form' : EventForm_data(initial={'image_url': event.image_url, 'notes': event.notes}),
                                     'mediaForm': EventMediaForm(),
-                                    'media' : Gallery.objects.filter(linked_event=event),
+                                    'media' : EventMedia.objects.filter(linked_event=event),
                                     'locationForm': LocationForm(initial={'address': address, 'latitude':latitude, 'longitude': longitude}),
                                     'address': address,
                                     'latitude': latitude,
@@ -935,7 +932,7 @@ def editEvent1(request, classid):
                                     'select': select,
                                     'form' : EventForm_data(initial={'image_url': event.image_url, 'notes': event.notes}),
                                     'mediaForm': EventMediaForm(),
-                                    'media' : Gallery.objects.filter(linked_event=event),
+                                    'media' : EventMedia.objects.filter(linked_event=event),
                                     'locationForm': LocationForm(initial={'address': address, 'latitude':latitude, 'longitude': longitude}),
                                     'address': address,
                                     'latitude': latitude,
@@ -969,7 +966,7 @@ def editEvent1(request, classid):
         'select': select,
         'form' : EventForm_data(initial={'image_url': event.image_url, 'notes': event.notes}),
         'mediaForm': EventMediaForm(),
-        'media' : Gallery.objects.filter(linked_event=event),
+        'media' : EventMedia.objects.filter(linked_event=event),
         'locationForm': LocationForm(initial={'address': address, 'latitude':latitude, 'longitude': longitude}),
         'address': address,
         'latitude': latitude,
@@ -1162,18 +1159,18 @@ def editActivity1(request, classid):
                 art = Art.objects.get(classid=classid)
                 art.image_url = None
                 art.save()
-            media = Media.objects.filter(art=classid)
+            media = ArtMedia.objects.filter(art=classid)
             for obj in media:
                 if obj.path in request.POST:
-                    Media.objects.filter(path=obj.path).delete()
+                    ArtMedia.objects.filter(path=obj.path).delete()
         
         for file in request.FILES.getlist('path'):
             while True:
                 try:
                     id = "".join(random.choices(string.digits, k=6))
-                    Media.objects.get(classid=id)
+                    ArtMedia.objects.get(classid=id)
                 except:
-                    media = Media.objects.create(classid=id, type=DMediaETipomm(code='image'), path=file, art=art)
+                    media = ArtMedia.objects.create(classid=id, path=file, art=art)
                     media.save()
                     break
 
@@ -1200,9 +1197,9 @@ def editActivity1(request, classid):
 
     context = {
         'art' : art,
-        'form' : ArtForm_data(initial={'image_url': art.image_url}),
+        'form' : ArtForm_data(initial={'image_url': art.image_url, 'link': art.link}),
         'mediaForm' : ArtMediaForm(),
-        'media' : Media.objects.filter(art=art),
+        'media' : ArtMedia.objects.filter(art=art),
         'locationForm': LocationForm(initial={'address': address, 'latitude':latitude, 'longitude': longitude}),
         'address': address,
         'latitude': latitude,
@@ -1630,9 +1627,9 @@ def newArt(request):
                     while True:
                         try:
                             id = "".join(random.choices(string.digits, k=6))
-                            Media.objects.get(classid=id)
+                            ArtMedia.objects.get(classid=id)
                         except:
-                            media = Media.objects.create(classid=id, type=DMediaETipomm(code='image'), path=file, art=art)
+                            media = ArtMedia.objects.create(classid=id, path=file, art=art)
                             media.save()
                             break
 
@@ -1761,9 +1758,9 @@ def newEvent(request):
                     while True:
                         try:
                             id = "".join(random.choices(string.digits, k=6))
-                            Gallery.objects.get(classid=id)
+                            EventMedia.objects.get(classid=id)
                         except:
-                            media = Gallery.objects.create(classid=id, path=file, linked_event=event)
+                            media = EventMedia.objects.create(classid=id, path=file, linked_event=event)
                             media.save()
                             break
 
@@ -1856,9 +1853,9 @@ def newActivity(request):
                 while True:
                     try:
                         id = "".join(random.choices(string.digits, k=6))
-                        Media.objects.get(classid=id)
+                        ArtMedia.objects.get(classid=id)
                     except:
-                        media = Media.objects.create(classid=id, type=DMediaETipomm(code='image'), path=file, art=art)
+                        media = ArtMedia.objects.create(classid=id, path=file, art=art)
                         media.save()
                         break
 
