@@ -6,12 +6,13 @@ from .models import *
 admin.site.register(Art)
 admin.site.register(Calendar)
 admin.site.register(Event)
-admin.site.register(Gallery)
+admin.site.register(EventMedia)
 admin.site.register(Location)
-admin.site.register(Media)
+admin.site.register(ArtMedia)
 admin.site.register(News)
 admin.site.register(Rss)
 admin.site.register(Tour)
+admin.site.register(TourMedia)
 
 admin.site.register(AArtCategoryArtCategory)
 admin.site.register(AArtTourTour)
@@ -24,7 +25,6 @@ admin.site.register(ArtTradT)
 
 admin.site.register(DArtEStato)
 admin.site.register(DELang)
-admin.site.register(DMediaETipomm)
 admin.site.register(DRssEState)
 admin.site.register(DTourETipoit)
 
@@ -32,8 +32,6 @@ admin.site.register(EventCategory)
 admin.site.register(EventCategoryNameTradT)
 admin.site.register(EventDescrTradT)
 admin.site.register(EventNameTradT)
-
-admin.site.register(MediaNameTradT)
 
 admin.site.register(NewsDescrTradT)
 admin.site.register(NewsTitleTradT)
