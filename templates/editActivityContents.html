@@ -49,6 +49,7 @@
             <nav id="navbar" class="navbar">
                 <ul>
                     <li><a class="nav-link scrollto" href="/">Home</a></li>
+                    <li><a class="nav-link scrollto" href="https://github.com/smigliorini/baldoutdoor" target="_blank">GitHub</a></li>
                     {% if user.is_superuser %}
                         <li><a class="nav-link scrollto active" href="/editActivity">Edit</a></li>
                         <li><a class="nav-link scrollto" href="/admin/">Control panel</a></li>
@@ -177,22 +178,24 @@
                         <div class="col-9">
                             <table style="border-collapse:separate; border-spacing:10px;">
                                  <tr>
+                                    <tr>
+                                        <td><label><b>  Link:</b></label></td>
+                                        <td>{{ form.link }}</td>
+                                    </tr>
                                     <td><label><b> Address:</b></label></td>
                                     <td>
                                         {{ locationForm.address }}
-                                        <!--input type="text" name="address" value="{{ locationForm.address }}" placeholder="Indirizzo"/-->
                                         <a data-bs-popper="label_info" data-popper-placement="right" title="Indirizzo del punto di interesse"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td></td>
-
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <td><label><b> Latitude:</b></label></td>
                                     <td>{{ locationForm.latitude }}</td>
-                                    <!--td><input type="text" name="lat" value="{{ locationForm.latitude }}" placeholder="Latitudine"/></td-->
+                                </tr>
+                                <tr>
                                     <td><label><b> Longitude:</b></label></td>
                                     <td>{{ locationForm.longitude }}</td>
-                                    <!--td><input type="text" name="long" value="{{ locationForm.longitude }}" placeholder="Longitudine"/></td-->
                                 </tr>
                             </table>
                             <br/><br/><br/>

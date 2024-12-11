@@ -52,6 +52,7 @@
             <nav id="navbar" class="navbar">
                 <ul>
                     <li><a class="nav-link scrollto" href="/">Home</a></li>
+                    <li><a class="nav-link scrollto" href="https://github.com/smigliorini/baldoutdoor" target="_blank">GitHub</a></li>
                     {% if user.is_superuser %}
                         <li><a class="nav-link scrollto" href="/editArt">Edit</a></li>
                         <li><a class="nav-link scrollto" href="/admin/">Control panel</a></li>
@@ -111,10 +112,14 @@
                                     <td><strong>Open time</strong>: </td>
                                     <td><div style="padding: 10px">{{ open_time_trad|safe}}</div></td>
                                 </tr>
-                                <!--li><strong>State</strong>: {{ art.state}}</li-->
+                                <!-- <li><strong>State</strong>: {{ art.state}}</li> -->
                                 <tr style="vertical-align:top">
                                     <td><strong>Tickets</strong>: </td>
                                     <td><div style="padding: 10px">{{ tickets_trad|safe}}</div></td>
+                                </tr>
+                                <tr style="vertical-align:top">
+                                    <td><strong>Link</strong>: </td>
+                                    <td>{{ art.link|safe}}</td>
                                 </tr>
                             </table>
                         <!--/div-->

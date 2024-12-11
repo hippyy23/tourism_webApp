@@ -63,6 +63,7 @@
             <nav id="navbar" class="navbar">
                 <ul>
                     <li><a class="nav-link scrollto" href="/">Home</a></li>
+                    <li><a class="nav-link scrollto" href="https://github.com/smigliorini/baldoutdoor" target="_blank">GitHub</a></li>
                     {% if user.is_superuser %}
                         <li><a class="nav-link scrollto active" href="/editArt">Edit</a></li>
                         <li><a class="nav-link scrollto" href="/admin/">Control panel</a></li>
@@ -128,7 +129,6 @@
                                 <tr>
                                   <td><label class="required"><b>  *Name:</b></label></td>
                                   <td>{{ form.name_it }} <a data-bs-popper="label_info" data-popper-placement="right" title="Nome del punto di interesse"><i class="bi-info-circle-fill" style="font-size: 17px;color: #37517e"></i></a></td>
-
                                 </tr>
 
                                 <tr>
@@ -156,6 +156,10 @@
                                   <td>{{ form.tickets }}</td>
                                 </tr>
 
+                                <tr>
+                                    <td><label class="required"><b>  Link:</b></label></td>
+                                    <td>{{ form.link }}</td>
+                                </tr>
                             </table><hr width="70%">
 
                             <div class="row">
