@@ -109,7 +109,7 @@ DATABASES = {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME':'tourismdb',
         'USER':'postgres',
-        'PASSWORD':'pa55w0rd',
+        'PASSWORD':'admin',
         'HOST':'localhost',
         'PORT':'5432',
     }
@@ -153,6 +153,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 
@@ -167,7 +169,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar':  [
-            ['Styles', 'Format', 'Bold', 'Italic', 'Underline', 'Strike', 'SpellChecker', 'Undo', 'Redo'],
+            ['Styles', 'Format', 'Bold', 'Italic', 'Underline', 'Strike', 'Link','SpellChecker', 'Undo', 'Redo'],
             ['TextColor', 'BGColor'],
             ['NumberedList','BulletedList'],
             ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
@@ -176,7 +178,7 @@ CKEDITOR_CONFIGS = {
             #['Source'],
         ],
         #'height': 300,
-        'width': 750,
+        'width': 760,
     },
 }
 
