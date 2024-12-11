@@ -9,7 +9,7 @@ class ArtForm(ModelForm):
     class Meta:
         model = Art
 
-        fields = ['name_it', 'descr_it', 'image_url', 'open_time', 'tickets']
+        fields = ['name_it', 'descr_it', 'image_url', 'open_time', 'tickets', 'link']
 
         widgets = {
             'name_it': forms.TextInput(attrs={'placeholder': 'Nome punto di interesse'}),
@@ -19,7 +19,8 @@ class ArtForm(ModelForm):
         labels = {
             'name_it': _('Name'),
             'descr_it': _('Description'),
-            'image_url': _('Cover image')
+            'image_url': _('Cover image'),
+            'Link': _('Link'),
         }
         help_texts = {
 
@@ -48,9 +49,10 @@ class ArtForm_Trad(ModelForm):
 class ArtForm_data(ModelForm):
     class Meta:
         model = Art
-        fields = ['image_url',]
+        fields = ['image_url', 'link']
         labels = {
-            'image_url': _('Cover image')
+            'image_url': _('Cover image'),
+            'link': _('Link'),
         }
 
         widgets = {
@@ -108,7 +110,7 @@ class EventForm(ModelForm):
 class EventForm_data(ModelForm):
     class Meta:
         model = Event
-        fields = ['image_url', 'notes', 'tickets']
+        fields = ['image_url', 'notes']
         labels = {
             'image_url': _('Cover image'),
         }
